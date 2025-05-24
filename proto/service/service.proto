@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package service.v1;
+
+option go_package = "github.com/roboricindustries/raycon-proto/gen;pb";
+
+service ServiceService {
+  rpc ListService (ListServiceRequest) returns (ListServiceResponse);
+}
+
+message Service {
+  uint64 id          = 1;
+  uint64 company_id  = 2;
+  string name        = 3;
+  uint32 order_number = 4;
+}
+
+message ListServiceResponse {
+  repeated Service services = 1;
+}
+
+message ListServiceRequest {
+  uint64 company_id  = 1;
+}

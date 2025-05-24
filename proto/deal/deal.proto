@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package deal.v1;
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/roboricindustries/raycon-proto/gen;pb";
+
+service DealService {
+  rpc CreateDeal (CreateDealRequest) returns (CreateDealResponse);
+  rpc ReadDeal (ReadDealRequest) returns (ReadDealResponse);
+}
+
+message CreateDealRequest {
+  uint64 client_id = 1;
+  uint64 company_id = 2;
+  uint64 instance_id = 3;
+  string source = 4;
+  uint64 link_source_id = 5;
+  string first_message = 6;
+}
+
+message CreateDealResponse {
+  string message = 1;
+  uint64 deal_id = 2;
+}
+
+message ReadDealRequest {
+  uint64 deal_id = 1;
+}
+
+message ReadDealResponse {
+  uint64 id = 1;
+  uint64 client_id = 2;
+  uint64 company_id = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+  uint64 instance_id = 6;
+  string source = 7;
+  uint64 link_source_id = 8;
+  string first_message = 9;
+  uint64 manager_id = 10;
+  GetClientScheme client_info = 11;
+  string comment = 12;
+  string status = 13;
+  uint64 substatus_id = 14;
+  string info = 15;
+  bool is_auto_dispatched = 16;
+  uint64 relative_number = 17;
+  uint64 referal_id = 18;
+  uint64 service_id = 19;
+  bool is_manual = 20;
+  uint64 version = 21;
+}
+
+message ClientProfileScheme {
+  string avatar = 1;
+  string name = 2;
+  string email = 3;
+  string category = 4;
+  string description = 5;
+  bool is_business = 6;
+}
+
+message GetClientScheme {
+  uint64 id = 1;
+  string phone_number = 2;
+  string name = 3;
+  ClientProfileScheme profile = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
