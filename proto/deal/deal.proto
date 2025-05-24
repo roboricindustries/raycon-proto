@@ -17,6 +17,7 @@ message CreateDealRequest {
   string source = 4;
   uint64 link_source_id = 5;
   string first_message = 6;
+  uint64 service_id = 7;
 }
 
 message CreateDealResponse {
