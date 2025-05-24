@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package company.v1;
+
+option go_package = "github.com/roboricindustries/raycon-proto/gen;pb";
+
+service CompanyService {
+  rpc GetCompanyBotMessages(GetCompanyBotMessagesRequest) returns (GetCompanyBotMessagesResponse);
+}
+
+message GetCompanyBotMessagesRequest {
+  uint64 company_id = 1;
+}
+
+message GetCompanyBotMessagesResponse {
+  string greetings_message = 1;
+  string stub_message      = 2;
+  string final_message     = 3;
+}
