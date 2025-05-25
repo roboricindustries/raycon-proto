@@ -8,6 +8,7 @@ option go_package = "github.com/roboricindustries/raycon-proto/gen;pb";
 service DealService {
   rpc CreateDeal (CreateDealRequest) returns (CreateDealResponse);
   rpc ReadDeal (ReadDealRequest) returns (ReadDealResponse);
+  rpc SetDealServiceId (SetDealServiceIdRequest) returns (SetDealServiceIdResponse);
 }
 
 message CreateDealRequest {
@@ -27,6 +28,17 @@ message CreateDealResponse {
 
 message ReadDealRequest {
   uint64 deal_id = 1;
+}
+
+message SetDealServiceIdRequest {
+  uint64 deal_id = 1;
+  uint64 service_id = 2;
+}
+
+
+message SetDealServiceIdResponse{
+  uint64 deal_id = 1;
+  uint64 service_id = 2;
 }
 
 message ReadDealResponse {

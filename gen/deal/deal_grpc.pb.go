@@ -19,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 type DealServiceClient interface {
 	CreateDeal(ctx context.Context, in *CreateDealRequest, opts ...grpc.CallOption) (*CreateDealResponse, error)
 	ReadDeal(ctx context.Context, in *ReadDealRequest, opts ...grpc.CallOption) (*ReadDealResponse, error)
+	SetDealServiceId(ctx context.Context, in *SetDealServiceIdRequest, opts ...grpc.CallOption) (*SetDealServiceIdResponse, error)
 }
 
 type dealServiceClient struct {
@@ -47,12 +48,22 @@ func (c *dealServiceClient) ReadDeal(ctx context.Context, in *ReadDealRequest, o
 	return out, nil
 }
 
+func (c *dealServiceClient) SetDealServiceId(ctx context.Context, in *SetDealServiceIdRequest, opts ...grpc.CallOption) (*SetDealServiceIdResponse, error) {
+	out := new(SetDealServiceIdResponse)
+	err := c.cc.Invoke(ctx, "/deal.v1.DealService/SetDealServiceId", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DealServiceServer is the server API for DealService service.
 // All implementations should embed UnimplementedDealServiceServer
 // for forward compatibility
 type DealServiceServer interface {
 	CreateDeal(context.Context, *CreateDealRequest) (*CreateDealResponse, error)
 	ReadDeal(context.Context, *ReadDealRequest) (*ReadDealResponse, error)
+	SetDealServiceId(context.Context, *SetDealServiceIdRequest) (*SetDealServiceIdResponse, error)
 }
 
 // UnimplementedDealServiceServer should be embedded to have forward compatible implementations.
@@ -64,6 +75,9 @@ func (UnimplementedDealServiceServer) CreateDeal(context.Context, *CreateDealReq
 }
 func (UnimplementedDealServiceServer) ReadDeal(context.Context, *ReadDealRequest) (*ReadDealResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReadDeal not implemented")
+}
+func (UnimplementedDealServiceServer) SetDealServiceId(context.Context, *SetDealServiceIdRequest) (*SetDealServiceIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetDealServiceId not implemented")
 }
 
 // UnsafeDealServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -113,6 +127,24 @@ func _DealService_ReadDeal_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DealService_SetDealServiceId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetDealServiceIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DealServiceServer).SetDealServiceId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/deal.v1.DealService/SetDealServiceId",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DealServiceServer).SetDealServiceId(ctx, req.(*SetDealServiceIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _DealService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "deal.v1.DealService",
 	HandlerType: (*DealServiceServer)(nil),
@@ -124,6 +156,10 @@ var _DealService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ReadDeal",
 			Handler:    _DealService_ReadDeal_Handler,
+		},
+		{
+			MethodName: "SetDealServiceId",
+			Handler:    _DealService_SetDealServiceId_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
