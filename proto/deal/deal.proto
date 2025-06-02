@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package deal.v1;
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 
 option go_package = "github.com/roboricindustries/raycon-proto/gen;pb";
 
@@ -9,6 +10,7 @@ service DealService {
   rpc CreateDeal (CreateDealRequest) returns (CreateDealResponse);
   rpc ReadDeal (ReadDealRequest) returns (ReadDealResponse);
   rpc SetDealServiceId (SetDealServiceIdRequest) returns (SetDealServiceIdResponse);
+  rpc DistributeDeal (DistributeDealRequest) returns(google.protobuf.Empty);
 }
 
 message CreateDealRequest {
@@ -24,6 +26,10 @@ message CreateDealRequest {
 message CreateDealResponse {
   string message = 1;
   uint64 deal_id = 2;
+}
+
+message DistributeDealRequest {
+  uint64 deal_id = 1;
 }
 
 message ReadDealRequest {

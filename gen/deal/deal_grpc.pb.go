@@ -7,6 +7,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -20,6 +21,7 @@ type DealServiceClient interface {
 	CreateDeal(ctx context.Context, in *CreateDealRequest, opts ...grpc.CallOption) (*CreateDealResponse, error)
 	ReadDeal(ctx context.Context, in *ReadDealRequest, opts ...grpc.CallOption) (*ReadDealResponse, error)
 	SetDealServiceId(ctx context.Context, in *SetDealServiceIdRequest, opts ...grpc.CallOption) (*SetDealServiceIdResponse, error)
+	DistributeDeal(ctx context.Context, in *DistributeDealRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type dealServiceClient struct {
@@ -57,6 +59,15 @@ func (c *dealServiceClient) SetDealServiceId(ctx context.Context, in *SetDealSer
 	return out, nil
 }
 
+func (c *dealServiceClient) DistributeDeal(ctx context.Context, in *DistributeDealRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/deal.v1.DealService/DistributeDeal", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DealServiceServer is the server API for DealService service.
 // All implementations should embed UnimplementedDealServiceServer
 // for forward compatibility
@@ -64,6 +75,7 @@ type DealServiceServer interface {
 	CreateDeal(context.Context, *CreateDealRequest) (*CreateDealResponse, error)
 	ReadDeal(context.Context, *ReadDealRequest) (*ReadDealResponse, error)
 	SetDealServiceId(context.Context, *SetDealServiceIdRequest) (*SetDealServiceIdResponse, error)
+	DistributeDeal(context.Context, *DistributeDealRequest) (*emptypb.Empty, error)
 }
 
 // UnimplementedDealServiceServer should be embedded to have forward compatible implementations.
@@ -78,6 +90,9 @@ func (UnimplementedDealServiceServer) ReadDeal(context.Context, *ReadDealRequest
 }
 func (UnimplementedDealServiceServer) SetDealServiceId(context.Context, *SetDealServiceIdRequest) (*SetDealServiceIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetDealServiceId not implemented")
+}
+func (UnimplementedDealServiceServer) DistributeDeal(context.Context, *DistributeDealRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DistributeDeal not implemented")
 }
 
 // UnsafeDealServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -145,6 +160,24 @@ func _DealService_SetDealServiceId_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DealService_DistributeDeal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DistributeDealRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DealServiceServer).DistributeDeal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/deal.v1.DealService/DistributeDeal",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DealServiceServer).DistributeDeal(ctx, req.(*DistributeDealRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _DealService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "deal.v1.DealService",
 	HandlerType: (*DealServiceServer)(nil),
@@ -160,6 +193,10 @@ var _DealService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetDealServiceId",
 			Handler:    _DealService_SetDealServiceId_Handler,
+		},
+		{
+			MethodName: "DistributeDeal",
+			Handler:    _DealService_DistributeDeal_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
