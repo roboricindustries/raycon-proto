@@ -16,4 +16,5 @@ message GetCompanyBotMessagesResponse {
   string greetings_message = 1;
   string stub_message      = 2;
   string final_message     = 3;
+  string bot_question_message = 4;
 }
