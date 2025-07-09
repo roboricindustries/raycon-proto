@@ -6,6 +6,7 @@ option go_package = "github.com/roboricindustries/raycon-proto/gen;pb";
 
 service CompanyService {
   rpc GetCompanyBotMessages(GetCompanyBotMessagesRequest) returns (GetCompanyBotMessagesResponse);
+  rpc GetCompanyExtensions(GetCompanyExtensionsRequest) returns (GetCompanyExtensionsResponse);
 }
 
 message GetCompanyBotMessagesRequest {
@@ -17,4 +18,18 @@ message GetCompanyBotMessagesResponse {
   string stub_message      = 2;
   string final_message     = 3;
   string bot_question_message = 4;
+}
+
+message GetCompanyExtensionsRequest {
+  uint64 company_id = 1;
+}
+
+message GetCompanyExtensionsResponse {
+  uint64 company_id = 1;
+  bool autodispatch = 2;
+  bool blacklist = 3;
+  bool nograph = 4;
+  bool referal = 5;
+  bool flat = 6;
+  bool disable_bot_fail_msg = 7;
 }
