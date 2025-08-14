@@ -1,0 +1,10 @@
+// common/v1/channels.proto
+syntax = "proto3";
+package common.v1;
+option go_package = "github.com/roboricindustries/raycon-proto/gen/common/v1;common";
+
+enum Channel {
+  CHANNEL_UNSPECIFIED = 0;
+  WHATSAPP_GREENAPI   = 1;
+  // future: EMAIL=2, SMS=3, ...
+}

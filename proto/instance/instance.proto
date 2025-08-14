@@ -1,0 +1,40 @@
+syntax = "proto3";
+package instance.v1;
+
+import "common/v1/channels.proto";
+option go_package = "github.com/roboricindustries/raycon-proto/gen;pb";
+
+
+// --- Request selectors (per-channel lookup keys)
+message WhatsAppGreenApiSelector {
+  uint64 config_id = 1; // required for chat CPs
+}
+
+// --- Request
+message GetChannelConfigRequest {
+  uint64 company_id = 1;
+  common.v1.Channel channel = 2;
+  // Channel-specific lookup keys (exactly one must be set)
+  oneof selector {
+    WhatsAppGreenApiSelector whatsapp_greenapi = 10;
+  }
+}
+
+
+// --- Response configs
+message WhatsAppGreenApiConfig {
+  uint64 config_id            = 1; // echo back for correlation
+  string provider_instance_id = 2; // Green-API instance id from provider
+  string api_key              = 3; // Green-API key used in API requests
+}
+
+message ChannelConfig {
+  common.v1.Channel channel = 1;
+  oneof value {
+    WhatsAppGreenApiConfig whatsapp = 10;
+  }
+}
+
+service ChannelConfigService {
+  rpc GetChannelConfig(GetChannelConfigRequest) returns (ChannelConfig);
+}

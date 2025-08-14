@@ -1,0 +1,11 @@
+// common/v1/roles.proto
+syntax = "proto3";
+package common.v1;
+option go_package = "github.com/roboricindustries/raycon-proto/gen/common/v1;common";
+
+enum RecipientRole {
+  RECIPIENT_ROLE_UNSPECIFIED = 0;
+  RECIPIENT_ROLE_USER = 1;
+  RECIPIENT_ROLE_MANAGER = 2;
+  RECIPIENT_ROLE_CLIENT = 3;
+}

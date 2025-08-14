@@ -1,0 +1,26 @@
+syntax = "proto3";
+package user.v1;
+
+import "common/v1/roles.proto";
+import "common/v1/channels.proto";
+option go_package = "github.com/roboricindustries/raycon-proto/gen;pb";
+
+message WhatsAppGreenApiContact { string phone = 1; }
+
+message GetContactRequest {
+  uint64 company_id = 1;
+  uint64 recipient_id = 2;
+  common.v1.RecipientRole recipient_role = 3;
+  common.v1.Channel channel = 4;
+}
+
+message Contact {
+  common.v1.Channel channel = 1;
+  oneof value {
+    WhatsAppGreenApiContact whatsapp_greenapi = 10;
+  }
+}
+
+service DirectoryService {
+  rpc GetContact(GetContactRequest) returns (Contact);
+}
