@@ -1,8 +1,7 @@
 syntax = "proto3";
 package instance.v1;
 
-import "common/v1/channels.proto";
-option go_package = "github.com/roboricindustries/raycon-proto/gen;pb";
+option go_package = "github.com/roboricindustries/raycon-proto/instance/v1;instancev1";
 
 
 // --- Request selectors (per-channel lookup keys)
@@ -13,7 +12,6 @@ message WhatsAppGreenApiSelector {
 // --- Request
 message GetChannelConfigRequest {
   uint64 company_id = 1;
-  common.v1.Channel channel = 2;
   // Channel-specific lookup keys (exactly one must be set)
   oneof selector {
     WhatsAppGreenApiSelector whatsapp_greenapi = 10;
@@ -29,9 +27,8 @@ message WhatsAppGreenApiConfig {
 }
 
 message ChannelConfig {
-  common.v1.Channel channel = 1;
   oneof value {
-    WhatsAppGreenApiConfig whatsapp = 10;
+    WhatsAppGreenApiConfig whatsapp_greenapi = 10;
   }
 }
 

@@ -3,7 +3,7 @@ package user.v1;
 
 import "common/v1/roles.proto";
 import "common/v1/channels.proto";
-option go_package = "github.com/roboricindustries/raycon-proto/gen;pb";
+option go_package = "github.com/roboricindustries/raycon-proto/gen/user/v1;userv1";
 
 message WhatsAppGreenApiContact { string phone = 1; }
 
@@ -21,6 +21,6 @@ message Contact {
   }
 }
 
-service DirectoryService {
+service ContactService {
   rpc GetContact(GetContactRequest) returns (Contact);
 }
