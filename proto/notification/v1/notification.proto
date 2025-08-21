@@ -1,0 +1,62 @@
+syntax = "proto3";
+package notification.v1;
+
+option go_package = "github.com/roboricindustries/raycon-proto/notification/v1;notificationv1";
+
+import "common/v1/langs.proto";
+import "common/v1/channels.proto";
+import "google/protobuf/timestamp.proto";
+
+message TemplateKey {
+  string notification_code = 1;
+  int64 company_id = 2; // 0 => system
+  common.v1.Channel channel = 3;
+  common.v1.Language language = 4;
+}
+
+message Template {
+  uint64 id = 1;
+  TemplateKey key = 2;
+  string subject = 3;
+  string body = 4;           
+  int32 version = 5;
+  bool is_active = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+message UpsertTemplateRequest {
+  TemplateKey key = 1;
+  string subject = 2;        
+  string body = 3;           
+  bool activate = 4;         // if true -> new version + set active
+}
+
+message UpsertTemplateResponse { Template template = 1; }
+
+message GetEffectiveTemplateRequest {
+  TemplateKey key = 1;
+}
+message GetEffectiveTemplateResponse {
+  Template company = 1;  // present if found
+  Template system = 2;
+  Template effective = 3;
+  bool used_fallback = 4;
+}
+
+message ListTemplateHistoryRequest {
+  TemplateKey key = 1;   // company_id may be 0 for system
+  int32 page_size = 2;
+  string page_token = 3;
+}
+message ListTemplateHistoryResponse {
+  repeated Template templates = 1; // newest first
+  string next_page_token = 2;
+}
+
+
+service TemplateService {
+  rpc UpsertTemplate(UpsertTemplateRequest) returns (UpsertTemplateResponse);
+  rpc GetEffectiveTemplate(GetEffectiveTemplateRequest) returns (GetEffectiveTemplateResponse);
+  rpc ListTemplateHistory(ListTemplateHistoryRequest) returns (ListTemplateHistoryResponse);
+}

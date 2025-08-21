@@ -1,0 +1,11 @@
+// common/v1/roles.proto
+syntax = "proto3";
+package common.v1;
+option go_package = "github.com/roboricindustries/raycon-proto/gen/common/v1;common";
+
+enum Language {
+  LANGUAGE_UNSPECIFIED = 0;
+  LANGUAGE_RU = 1;
+  LANGUAGE_KZ = 2;
+  LANGUAGE_EN = 3;
+}
