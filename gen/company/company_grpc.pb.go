@@ -7,6 +7,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,6 +20,11 @@ const _ = grpc.SupportPackageIsVersion7
 type CompanyServiceClient interface {
 	GetCompanyBotMessages(ctx context.Context, in *GetCompanyBotMessagesRequest, opts ...grpc.CallOption) (*GetCompanyBotMessagesResponse, error)
 	GetCompanyExtensions(ctx context.Context, in *GetCompanyExtensionsRequest, opts ...grpc.CallOption) (*GetCompanyExtensionsResponse, error)
+	ListMultichatStatuses(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListMultichatStatusesResponse, error)
+	// Optional incremental: by page or by updated_since.
+	ListMultichatStatusesSince(ctx context.Context, in *ListSinceRequest, opts ...grpc.CallOption) (*ListMultichatStatusesResponse, error)
+	// Tiny point lookup (rarely needed once you have the cache).
+	GetMultichatStatus(ctx context.Context, in *GetMultichatStatusRequest, opts ...grpc.CallOption) (*MultichatStatus, error)
 }
 
 type companyServiceClient struct {
@@ -47,12 +53,44 @@ func (c *companyServiceClient) GetCompanyExtensions(ctx context.Context, in *Get
 	return out, nil
 }
 
+func (c *companyServiceClient) ListMultichatStatuses(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListMultichatStatusesResponse, error) {
+	out := new(ListMultichatStatusesResponse)
+	err := c.cc.Invoke(ctx, "/company.v1.CompanyService/ListMultichatStatuses", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *companyServiceClient) ListMultichatStatusesSince(ctx context.Context, in *ListSinceRequest, opts ...grpc.CallOption) (*ListMultichatStatusesResponse, error) {
+	out := new(ListMultichatStatusesResponse)
+	err := c.cc.Invoke(ctx, "/company.v1.CompanyService/ListMultichatStatusesSince", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *companyServiceClient) GetMultichatStatus(ctx context.Context, in *GetMultichatStatusRequest, opts ...grpc.CallOption) (*MultichatStatus, error) {
+	out := new(MultichatStatus)
+	err := c.cc.Invoke(ctx, "/company.v1.CompanyService/GetMultichatStatus", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations should embed UnimplementedCompanyServiceServer
 // for forward compatibility
 type CompanyServiceServer interface {
 	GetCompanyBotMessages(context.Context, *GetCompanyBotMessagesRequest) (*GetCompanyBotMessagesResponse, error)
 	GetCompanyExtensions(context.Context, *GetCompanyExtensionsRequest) (*GetCompanyExtensionsResponse, error)
+	ListMultichatStatuses(context.Context, *emptypb.Empty) (*ListMultichatStatusesResponse, error)
+	// Optional incremental: by page or by updated_since.
+	ListMultichatStatusesSince(context.Context, *ListSinceRequest) (*ListMultichatStatusesResponse, error)
+	// Tiny point lookup (rarely needed once you have the cache).
+	GetMultichatStatus(context.Context, *GetMultichatStatusRequest) (*MultichatStatus, error)
 }
 
 // UnimplementedCompanyServiceServer should be embedded to have forward compatible implementations.
@@ -64,6 +102,15 @@ func (UnimplementedCompanyServiceServer) GetCompanyBotMessages(context.Context, 
 }
 func (UnimplementedCompanyServiceServer) GetCompanyExtensions(context.Context, *GetCompanyExtensionsRequest) (*GetCompanyExtensionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCompanyExtensions not implemented")
+}
+func (UnimplementedCompanyServiceServer) ListMultichatStatuses(context.Context, *emptypb.Empty) (*ListMultichatStatusesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMultichatStatuses not implemented")
+}
+func (UnimplementedCompanyServiceServer) ListMultichatStatusesSince(context.Context, *ListSinceRequest) (*ListMultichatStatusesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMultichatStatusesSince not implemented")
+}
+func (UnimplementedCompanyServiceServer) GetMultichatStatus(context.Context, *GetMultichatStatusRequest) (*MultichatStatus, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMultichatStatus not implemented")
 }
 
 // UnsafeCompanyServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -113,6 +160,60 @@ func _CompanyService_GetCompanyExtensions_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_ListMultichatStatuses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).ListMultichatStatuses(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/company.v1.CompanyService/ListMultichatStatuses",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).ListMultichatStatuses(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CompanyService_ListMultichatStatusesSince_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSinceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).ListMultichatStatusesSince(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/company.v1.CompanyService/ListMultichatStatusesSince",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).ListMultichatStatusesSince(ctx, req.(*ListSinceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CompanyService_GetMultichatStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMultichatStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).GetMultichatStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/company.v1.CompanyService/GetMultichatStatus",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).GetMultichatStatus(ctx, req.(*GetMultichatStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _CompanyService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "company.v1.CompanyService",
 	HandlerType: (*CompanyServiceServer)(nil),
@@ -124,6 +225,18 @@ var _CompanyService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCompanyExtensions",
 			Handler:    _CompanyService_GetCompanyExtensions_Handler,
+		},
+		{
+			MethodName: "ListMultichatStatuses",
+			Handler:    _CompanyService_ListMultichatStatuses_Handler,
+		},
+		{
+			MethodName: "ListMultichatStatusesSince",
+			Handler:    _CompanyService_ListMultichatStatusesSince_Handler,
+		},
+		{
+			MethodName: "GetMultichatStatus",
+			Handler:    _CompanyService_GetMultichatStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

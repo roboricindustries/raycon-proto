@@ -3,10 +3,23 @@ syntax = "proto3";
 package company.v1;
 
 option go_package = "github.com/roboricindustries/raycon-proto/gen;pb";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "common/v1/structs.proto";
 
 service CompanyService {
   rpc GetCompanyBotMessages(GetCompanyBotMessagesRequest) returns (GetCompanyBotMessagesResponse);
   rpc GetCompanyExtensions(GetCompanyExtensionsRequest) returns (GetCompanyExtensionsResponse);
+  
+  rpc ListMultichatStatuses (google.protobuf.Empty)
+      returns (ListMultichatStatusesResponse);
+
+  // Optional incremental: by page or by updated_since.
+  rpc ListMultichatStatusesSince (ListSinceRequest)
+      returns (ListMultichatStatusesResponse);
+    
+  // Tiny point lookup (rarely needed once you have the cache).
+  rpc GetMultichatStatus (GetMultichatStatusRequest) returns (MultichatStatus);
 }
 
 message GetCompanyBotMessagesRequest {
@@ -24,6 +37,10 @@ message GetCompanyExtensionsRequest {
   uint64 company_id = 1;
 }
 
+message GetMultichatStatusRequest {
+  uint64 company_id = 1;
+}
+
 message GetCompanyExtensionsResponse {
   uint64 company_id = 1;
   bool autodispatch = 2;
@@ -32,4 +49,25 @@ message GetCompanyExtensionsResponse {
   bool referal = 5;
   bool flat = 6;
   bool disable_bot_fail_msg = 7;
+}
+
+
+message MultichatStatus {
+  common.v1.TenantRef tenant = 1;
+  bool      enabled = 2;
+  int64     version = 3;
+  google.protobuf.Timestamp     updated_at = 4;
+}
+
+message ListMultichatStatusesResponse {
+  repeated MultichatStatus items = 1;
+}
+
+message ListSinceRequest {
+  // Choose one strategy (timestamp-based incremental)
+  google.protobuf.Timestamp updated_since = 1;
+
+  // Optional paging
+  int32  page_size  = 2; // default on server if 0
+  string page_token = 3; // opaque token returned in response if you add it later
 }

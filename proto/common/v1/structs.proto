@@ -1,0 +1,9 @@
+// common/v1/structs.proto
+syntax = "proto3";
+package common.v1;
+option go_package = "github.com/roboricindustries/raycon-proto/gen/common/v1;common";
+
+message TenantRef {
+    uint64 company_id = 1;
+    uint64 counterparty_id = 2;
+}
