@@ -20,6 +20,12 @@ service CompanyService {
     
   // Tiny point lookup (rarely needed once you have the cache).
   rpc GetMultichatStatus (GetMultichatStatusRequest) returns (MultichatStatus);
+
+  rpc ListCompanies (google.protobuf.Empty)
+      returns (ListCompaniesResponse);
+
+  rpc GetCompany (GetCompanyRequest) returns (Company);
+
 }
 
 message GetCompanyBotMessagesRequest {
@@ -70,4 +76,20 @@ message ListSinceRequest {
   // Optional paging
   int32  page_size  = 2; // default on server if 0
   string page_token = 3; // opaque token returned in response if you add it later
+}
+
+message Company {
+  common.v1.TenantRef tenant = 1;
+  int64 version = 2;
+  string name = 3;
+  string description = 4;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message ListCompaniesResponse {
+  repeated Company items = 1;
+}
+
+message GetCompanyRequest {
+  uint64 company_id = 1;
 }

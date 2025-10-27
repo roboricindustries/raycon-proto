@@ -25,6 +25,8 @@ type CompanyServiceClient interface {
 	ListMultichatStatusesSince(ctx context.Context, in *ListSinceRequest, opts ...grpc.CallOption) (*ListMultichatStatusesResponse, error)
 	// Tiny point lookup (rarely needed once you have the cache).
 	GetMultichatStatus(ctx context.Context, in *GetMultichatStatusRequest, opts ...grpc.CallOption) (*MultichatStatus, error)
+	ListCompanies(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListCompaniesResponse, error)
+	GetCompany(ctx context.Context, in *GetCompanyRequest, opts ...grpc.CallOption) (*Company, error)
 }
 
 type companyServiceClient struct {
@@ -80,6 +82,24 @@ func (c *companyServiceClient) GetMultichatStatus(ctx context.Context, in *GetMu
 	return out, nil
 }
 
+func (c *companyServiceClient) ListCompanies(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListCompaniesResponse, error) {
+	out := new(ListCompaniesResponse)
+	err := c.cc.Invoke(ctx, "/company.v1.CompanyService/ListCompanies", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *companyServiceClient) GetCompany(ctx context.Context, in *GetCompanyRequest, opts ...grpc.CallOption) (*Company, error) {
+	out := new(Company)
+	err := c.cc.Invoke(ctx, "/company.v1.CompanyService/GetCompany", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations should embed UnimplementedCompanyServiceServer
 // for forward compatibility
@@ -91,6 +111,8 @@ type CompanyServiceServer interface {
 	ListMultichatStatusesSince(context.Context, *ListSinceRequest) (*ListMultichatStatusesResponse, error)
 	// Tiny point lookup (rarely needed once you have the cache).
 	GetMultichatStatus(context.Context, *GetMultichatStatusRequest) (*MultichatStatus, error)
+	ListCompanies(context.Context, *emptypb.Empty) (*ListCompaniesResponse, error)
+	GetCompany(context.Context, *GetCompanyRequest) (*Company, error)
 }
 
 // UnimplementedCompanyServiceServer should be embedded to have forward compatible implementations.
@@ -111,6 +133,12 @@ func (UnimplementedCompanyServiceServer) ListMultichatStatusesSince(context.Cont
 }
 func (UnimplementedCompanyServiceServer) GetMultichatStatus(context.Context, *GetMultichatStatusRequest) (*MultichatStatus, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMultichatStatus not implemented")
+}
+func (UnimplementedCompanyServiceServer) ListCompanies(context.Context, *emptypb.Empty) (*ListCompaniesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListCompanies not implemented")
+}
+func (UnimplementedCompanyServiceServer) GetCompany(context.Context, *GetCompanyRequest) (*Company, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCompany not implemented")
 }
 
 // UnsafeCompanyServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -214,6 +242,42 @@ func _CompanyService_GetMultichatStatus_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_ListCompanies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).ListCompanies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/company.v1.CompanyService/ListCompanies",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).ListCompanies(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CompanyService_GetCompany_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCompanyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).GetCompany(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/company.v1.CompanyService/GetCompany",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).GetCompany(ctx, req.(*GetCompanyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _CompanyService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "company.v1.CompanyService",
 	HandlerType: (*CompanyServiceServer)(nil),
@@ -237,6 +301,14 @@ var _CompanyService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMultichatStatus",
 			Handler:    _CompanyService_GetMultichatStatus_Handler,
+		},
+		{
+			MethodName: "ListCompanies",
+			Handler:    _CompanyService_ListCompanies_Handler,
+		},
+		{
+			MethodName: "GetCompany",
+			Handler:    _CompanyService_GetCompany_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
